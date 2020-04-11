@@ -6,35 +6,33 @@
 <!-- Main -->
 {% block main %}
 <div class="row h-100">
-    <div class="col-6 card">
-        <div class="card-body">
-            <h5 class="card-title">Todo</h5>
-            <h6 class="card-subtitle mb-2 text-muted">0 pennding tasks</h6>
+    <div class="col-6 p-5">
 
-            <ul class="list group list-group-flush">
-                <li class="list-group-item custom-control custom-checkbox my-2">
-                    <input type="checkbox" class="custom-control-input" id="customCheck1" name="example1">
-                    <label class="custom-control-label" for="customCheck1">Task 1</label>
-                </li>
-                <li class="list-group-item custom-control custom-checkbox my-2">
-                    <input type="checkbox" class="custom-control-input" id="customCheck2" name="example2">
-                    <label class="custom-control-label" for="customCheck2">Task 2</label>
-                </li>
-                <li class="list-group-item custom-control custom-checkbox my-2">
-                    <input type="checkbox" class="custom-control-input" id="customCheck3" name="example3">
-                    <label class="custom-control-label" for="customCheck3">Task 3</label>
-                </li>
-            </ul>
+        <h5>Todo</h5>
+        <h6 class="mb-2 text-muted">0 pending tasks</h6>
+        <ul class="list group list-group-flush">
+            <li class="list-group-item custom-control custom-checkbox my-2">
+                <input type="checkbox" class="custom-control-input" id="customCheck1" name="example1">
+                <label class="custom-control-label" for="customCheck1">Task 1</label>
+            </li>
+            <li class="list-group-item custom-control custom-checkbox my-2">
+                <input type="checkbox" class="custom-control-input" id="customCheck2" name="example2">
+                <label class="custom-control-label" for="customCheck2">Task 2</label>
+            </li>
+            <li class="list-group-item custom-control custom-checkbox my-2">
+                <input type="checkbox" class="custom-control-input" id="customCheck3" name="example3">
+                <label class="custom-control-label" for="customCheck3">Task 3</label>
+            </li>
+        </ul>
 
-            <form action="/add" method="POST">
-                <div class="input-group">
-                    <div class="input-group-prepend"><input class="btn btn-outline-primary" type="submit" value=" + "></div>
-                    <input class="form-control" type="text" placeholder=" task" name="todoitem">
-                </div>
-            </form>
+        <form action="/add" method="POST">
+            <div class="input-group">
+                <div class="input-group-prepend"><input class="btn btn-outline-primary" type="submit" value=" + "></div>
+                <input class="form-control" type="text" placeholder=" task" name="todoitem">
+            </div>
+        </form>
 
 
-        </div>
     </div>
     <div class="col-6">
         Timer
