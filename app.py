@@ -45,7 +45,34 @@ def unauthorized():
 @app.route('/', methods = ['GET', 'POST'])
 @login_required
 def main():
-    return render_template('main.html')
+    incomplete = Todo.query.filter_by(complete = False).all()
+    complete = Todo.query.filter_by(complete = True).all()
+    return render_template('main.html', incomplete = incomplete, complete = complete)
+
+@app.route('/add', methods = ['POST'])
+@login_required
+def add():
+    todoitem = request.form['todoitem']
+    todo = Todo(userid = current_user.id, text = todoitem)
+    db.session.add(todo)
+    db.session.commit()
+    return redirect('/')
+
+@app.route('/update/<id>')
+@login_required
+def update(id):
+    todo = Todo.query.filter_by(id = id).first()
+    todo.complete = not todo.complete
+    db.session.commit()
+    return redirect('/')
+
+@app.route('/delete/<id>')
+@login_required
+def delete(id):
+    todo = Todo.query.filter_by(id = id).first()
+    db.session.delete(todo)
+    db.session.commit()
+    return redirect('/')
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -142,6 +169,7 @@ def register():
 def logout():
     """Log user out"""
     logout_user()
+    flash("Logged out successfully.", category = "success")
     return redirect('/login')
 
 
