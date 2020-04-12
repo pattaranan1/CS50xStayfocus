@@ -1,6 +1,7 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
+from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
 app = Flask(__name__)
@@ -37,6 +38,10 @@ class Todo(db.Model):
 def get(id):
     return User.query.get(id)
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    return redirect('/login')
+
 @app.route('/', methods = ['GET', 'POST'])
 @login_required
 def main():
@@ -44,39 +49,99 @@ def main():
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
+    """Log user in"""
     if request.method == 'GET':
         return render_template('login.html')
     else:
+        # Get username and password
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username = username).first()
-        login_user(user)
+
+        # Ensure username was submitted
+        if not username:
+            flash("must provide username", "warning")
+            return redirect('/login')
+
+        # Ensure password was submitted
+        elif not password:
+            flash("must provide password", "warning")
+            return redirect('/login')
+
+        # Query User from database
+        user = User.query.filter_by(username = username).all()
+
+        # Ensure username exists and password is correct
+        if len(user) != 1 or not check_password_hash(user[0].hash, password):
+            flash("invalid username and/or password", "danger")
+            return redirect('/login')
+    
+        # User login
+        login_user(user[0])
+
+        flash("Logged in successfully.", category = "success")
+
         return redirect('/')
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
-
+    """Register user"""
     if request.method == 'GET':
         return render_template('register.html')
     else:
+        # Get username, password, and email
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
         confirmation = request.form['confirmation']
 
-        user = User(username=username, email=email, hash=password)
+        # Ensure username was submitted
+        if not username:
+            flash("must provide username", "warning")
+            return redirect('/register')
 
+        # Ensure password was submitted
+        elif not password:
+            flash("must provide password", "warning")
+            return redirect('/register')
+
+        # Ensure two password fields match
+        elif password != confirmation:
+            flash("Sorry, your password didn't match", "warning")
+            return redirect('/register')
+
+        # Query database for username
+        user = User.query.filter_by(username = username).all()
+
+        # Ensure username isn't already taken
+        if len(user) == 1:
+            flash("Sorry, the username is already taken", "warning")
+            return redirect('/register')
+
+        # Query database for email
+        user = User.query.filter_by(email = email).all()
+
+        # Ensure username isn't already taken
+        if len(user) == 1:
+            flash("Sorry, the email is already taken", "warning")
+            return redirect('/register')
+
+        # Register user into database
+        user = User(username=username, email=email, hash = generate_password_hash(password))
         db.session.add(user)
         db.session.commit()
         
+        # Query user from database
         user = User.query.filter_by(username = username).first()
+
+        # User login
         login_user(user)
 
         return redirect('/')
 
 @app.route('/logout')
 def logout():
-    logout_user(current_user)
+    """Log user out"""
+    logout_user()
     return redirect('/login')
 
 
