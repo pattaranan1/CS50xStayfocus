@@ -3,6 +3,7 @@ CS50xSTAYFOCUS flask website
 Stayfocus is a website to help you to focus at work or while studying.
 
 Features:
+
     1. Todolist 
         - Add task
         - Delete task
