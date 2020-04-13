@@ -27,7 +27,7 @@
 
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-stayfocus">
         <a class="navbar-brand" href="/">CS50xStayFocus</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -37,7 +37,6 @@
             <ul class="navbar-nav mr-auto mt-2">
                 <li class="nav-item"><a class="nav-link" href="/">Todo</a></li>
                 <li class="nav-item"><a class="nav-link" href="/timer">Timer</a></li>
-                <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
             </ul>
             <ul class="navbar-nav ml-auto mt-2">
                 <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
@@ -74,7 +73,7 @@
 
 
     <!-- Main -->
-    <main class="container p-5 {% block layout %}{% endblock %}">
+    <main class="container {% block layout %}{% endblock %}">
         {% block main %}{% endblock %}
     </main>
 </body>

@@ -5,3 +5,30 @@
 .fa-edit:hover {
     color: darkgray;
 }
+
+main.center .form-control {
+    /* center form controls */
+    display: inline-block;
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main.center {
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+    /* center contents */
+    text-align: center;
+}
+
+nav .navbar-brand {
+    /* size for brand */
+    font-size: xx-large;
+}
+
+nav .navbar-nav {
+    font-size: large;
+}
+
+.navbar-stayfocus {
+    background-color: #05386B;
+}
