@@ -1,0 +1,192 @@
+{% extends 'layout.html' %}
+
+<!-- Title -->
+{% block title %}timer{% endblock %}
+<!-- Main -->
+{% block main %}
+<div class="row">
+    <div class="col-4">
+        <h5>Timer</h5>
+        <div id="settings">
+            <div class="form-group">
+                <label>Work Duration</label>
+                <select class="form-control" id="workduration ">
+          <option value=20>20 Minutes</option>
+          <option value=25 selected>25 Minutes</option>
+          <option value=30>30 Minutes</option>
+          <option value=35>35 Minutes</option>
+          <option value=40>40 Minutes</option>
+          <option value=45>45 Minutes</option>
+          <option value=60>60 Minutes</option>
+        </select>
+            </div>
+            <div class="form-group">
+                <label>Break Duration</label>
+                <select class="form-control" id="breakduration">
+          <option value=2>2 Minutes</option>
+          <option value=5 selected>5 Minutes</option>
+          <option value=10>10 Minutes</option>
+        </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Whitenoise</label>
+            <select class="form-control" id="whitenoise">
+      <option value="none" selected>---</option>
+      <option value="rain.mp3 ">Rain</option>
+      <option value="campfire.mp3 ">Campfire</option>
+      <option value="ocean.mp3 ">Ocean</option>
+    </select>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="card" style="text-align: center; font-size: 48px;">
+            <h4 class="card-title mt-3" id="state">Working Time</h4>
+            <h6 class="card-subtitle text-muted mb-3" id="substate">Let's do some work</h6>
+            <div class="card-body">
+                <span id="minute">25</span> : <span id="second">00</span>
+                <div>
+                    <button id="start-btn" class="btn btn-primary">start</button>
+                    <button id="stop-btn" class="btn btn-primary">stop</button>
+                    <button id="reset-btn" class="btn btn-primary">reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // 2 digit formatter
+    function n(n) {
+        return n > 9 ? "" + n : "0" + n;
+    }
+
+    var workduration = 25 * 60;
+    var breakduration = 5 * 60;
+    var notification = new Audio('/static/eventually.mp3')
+        // State true: workduration, false: breakduration
+    var state = true;
+
+    $('#workduration').on('change', function() {
+
+        if (state === true) {
+            $('#minute').html($(this).val());
+            $('#second').html('00');
+        }
+
+        workduration = $(this).val() * 60;
+    });
+
+    $('#breakduration').on('change', function() {
+
+        if (state === false) {
+            $('#minute').html(n($(this).val()));
+            $('#second').html('00');
+        }
+        breakduration = $(this).val() * 60;
+    });
+
+    var whitenoise;
+    $('#whitenoise').on('change', function() {
+        if ($(this).val() != "none") {
+            if (whitenoise) {
+                whitenoise.pause();
+                whitenoise.currentTime = 0;
+            }
+            whitenoise = new Audio("/static/" + $(this).val());
+            whitenoise.loop = true;
+            whitenoise.volume = 0.7;
+            whitenoise.play();
+        } else {
+            if (whitenoise) {
+                whitenoise.pause();
+                whitenoise.currentTime = 0;
+            }
+        }
+    });
+
+    var duration;
+
+
+    function SetState(state) {
+        if (state) {
+            $('#state').html('Working Time');
+            $('#substate').html("Let 's do some work!");
+        } else {
+            $('#state').html('Breaking Time');
+            $('#substate').html("Let's have a break!");
+        }
+    }
+
+    function Timer() {
+
+        if (state) {
+            --workduration;
+            duration = workduration;
+
+        } else {
+            --breakduration;
+            duration = breakduration;
+
+        }
+        minute = Math.floor(duration / 60);
+        second = duration - minute * 60;
+        $('#minute').html(n(minute));
+        $('#second').html(n(second));
+
+        if (duration <= 0) {
+            clearInterval(intervalId);
+
+            $("#start-btn ").prop('disabled', false);
+            $("#settings *").prop('disabled', false);
+
+            state = !state;
+
+            if (state) {
+                $('#minute').html($("#workduration").val());
+            } else {
+                $('#minute').html(n($("#breakduration").val()));
+            }
+            $('#second').html('00');
+
+            workduration = $("#workduration").val() * 60;
+            breakduration = $("#breakduration").val() * 60;
+
+            SetState(state);
+
+            notification.play();
+        }
+    }
+
+    $('#start-btn').click(function() {
+        $("#start-btn").prop('disabled', true);
+        $("#settings * ").prop('disabled', true);
+        intervalId = setInterval(Timer, 1000);
+    });
+
+    $('#stop-btn').click(function() {
+        $("#start-btn").prop('disabled', false);
+        $("#settings *").prop('disabled', false);
+        if (intervalId) {
+            clearInterval(intervalId)
+        }
+    });
+
+    $('#reset-btn').click(function() {
+        $("#start-btn ").prop('disabled', false);
+        $("#settings * ").prop('disabled', false);
+
+        if (intervalId) {
+            clearInterval(intervalId)
+        }
+
+        $('#minute').html($("#workduration").val());
+        $('#second').html('00');
+        workduration = $("#workduration").val() * 60;
+        breakduration = $("breakduration").val() * 60;
+
+        state = true;
+        SetState(state);
+    });
+</script>
+{% endblock %}

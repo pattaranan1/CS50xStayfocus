@@ -172,6 +172,11 @@ def logout():
     flash("Logged out successfully.", category = "success")
     return redirect('/login')
 
-
+@app.route('/timer', methods=['GET', 'POST'])
+def timer():
+    if request.method == "GET":
+        return render_template('timer.html')
+    else:
+        return render_template('timer.html')
 if __name__ == '__main__':
     app.run(debug = True)

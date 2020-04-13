@@ -2,59 +2,41 @@
 
 <!-- Title -->
 {% block title %} CS50xStayFocus {% endblock %}
-
+<!-- Layout size-->
+{% block layout %}w-50{% endblock %}
 <!-- Main -->
 {% block main %}
-<div class="row h-100">
-    <div class="col-6 p-5">
 
-        <h5>Todo</h5>
-        <h6 class="mb-2 text-muted">{{incomplete|length}} pending tasks</h6>
+<h5>Todo</h5>
+<h6 class="mb-2 text-muted">{{incomplete|length}} pending tasks</h6>
 
-        <ul class="list group list-group-flush">
-            {% for todo in incomplete %}
-            <li class="list-group-item custom-checkbox my-2">
-                <input type="checkbox" onclick='window.location.assign("/update/{{ todo.id }}")' class="custom-control-input" id="customCheck{{todo.id}}" name="{{todo.id}}">
-                <label class="custom-control-label" for="customCheck{{todo.id}}">{{ todo.text }}</label>
-                <span onclick='window.location.assign("/delete/{{ todo.id }}")' class="fas fa-trash fa-lg mx-2 float-right"></span>
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
+<ul class="list group list-group-flush">
+    {% for todo in incomplete %}
+    <li class="list-group-item custom-checkbox my-2">
+        <input type="checkbox" onclick='window.location.assign("/update/{{ todo.id }}")' class="custom-control-input" id="customCheck{{todo.id}}" name="{{todo.id}}">
+        <label class="custom-control-label" for="customCheck{{todo.id}}">{{ todo.text }}</label>
+        <span onclick='window.location.assign("/delete/{{ todo.id }}")' class="fas fa-trash fa-lg mx-2 float-right"></span>
+    </li>
+    {% endfor %}
+</ul>
 
-        <form action="/add" method="POST">
-            <div class="input-group">
-                <div class="input-group-prepend"><input class="btn btn-outline-primary" type="submit" value=" + "></div>
-                <input class="form-control" type="text" placeholder=" task" name="todoitem" required>
-            </div>
-        </form>
-
-        <ul class="list group list-group-flush">
-            {% for todo in complete %}
-            <li class="list-group-item custom-control custom-checkbox my-2">
-                <input type="checkbox" onclick='window.location.assign("/update/{{ todo.id }}")' class="custom-control-input" id="customCheck{{todo.id}}" name="{{todo.id}}" checked>
-                <label class="custom-control-label text-muted" for="customCheck{{todo.id}}"><del>{{ todo.text }}</del></label>
-                <span class="float-right">
-                <span onclick='window.location.assign("/delete/{{ todo.id }}")' class="fas fa-trash fa-lg mx-2"></span>
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <script>
-            $(document).ready(function() {
-                $('span.fa-edit').click(function() {
-                    var li = $(this).parent().parent();
-                    li.find('label').attr('contenteditable', 'true');
-                    li.find('label').focus();
-                });
-            });
-        </script>
-
-
+<form action="/add" method="POST">
+    <div class="input-group">
+        <div class="input-group-prepend"><input class="btn btn-outline-primary" type="submit" value=" + "></div>
+        <input class="form-control" autocomplete="off" type="text" placeholder=" task" name="todoitem" required>
     </div>
-    <div class="col-6">
-        Timer
-    </div>
-</div>
+</form>
+
+<ul class="list group list-group-flush">
+    {% for todo in complete %}
+    <li class="list-group-item custom-control custom-checkbox my-2">
+        <input type="checkbox" onclick='window.location.assign("/update/{{ todo.id }}")' class="custom-control-input" id="customCheck{{todo.id}}" name="{{todo.id}}" checked>
+        <label class="custom-control-label text-muted" for="customCheck{{todo.id}}"><del>{{ todo.text }}</del></label>
+
+        <span onclick='window.location.assign("/delete/{{ todo.id }}")' class="fas fa-trash fa-lg mx-2 float-right"></span>
+    </li>
+    {% endfor %}
+</ul>
+
+
 {% endblock %}
